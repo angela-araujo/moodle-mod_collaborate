@@ -33,19 +33,13 @@ $id = optional_param('id', 0, PARAM_INT);
 $n  = optional_param('n', 0, PARAM_INT);
 
 if ($id) {
-    $cm = get_coursemodule_from_id('collaborate', $id, 0, false,
-            MUST_EXIST);
-    $course = $DB->get_record('course',
-            array('id' => $cm->course), '*', MUST_EXIST);
-    $collaborate = $DB->get_record('collaborate',
-            array('id' => $cm->instance), '*', MUST_EXIST);
+    $cm = get_coursemodule_from_id('collaborate', $id, 0, false, MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $collaborate = $DB->get_record('collaborate', array('id' => $cm->instance), '*', MUST_EXIST);
 } else if ($n) {
-    $collaborate = $DB->get_record('collaborate', array('id' => $n), '*',
-            MUST_EXIST);
-    $course = $DB->get_record('course',
-            array('id' => $collaborate->course), '*', MUST_EXIST);
-    $cm = get_coursemodule_from_instance('collaborate', $collaborate->id,
-            $course->id, false, MUST_EXIST);
+    $collaborate = $DB->get_record('collaborate', array('id' => $n), '*', MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $collaborate->course), '*', MUST_EXIST);
+    $cm = get_coursemodule_from_instance('collaborate', $collaborate->id, $course->id, false, MUST_EXIST);
 }
 
 // Print the page header.
@@ -53,8 +47,17 @@ $PAGE->set_url('/mod/collaborate/view.php', array('id' => $cm->id));
 
 require_login($course, true, $cm);
 
+// Set the page information.
 $PAGE->set_title(format_string($collaborate->name));
 $PAGE->set_heading(format_string($course->fullname));
+
+// Let's consider the activity "viewed" at this point.
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
+
+// Let's add the module viewed event.
+$event = \mod_collaborate\event\page_viewed::create(['context' => $PAGE->context]);
+$event->trigger();
 
 // The renderer performs output to the page.
 $renderer = $PAGE->get_renderer('mod_collaborate');
