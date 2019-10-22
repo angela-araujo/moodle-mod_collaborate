@@ -60,15 +60,26 @@ class mod_collaborate_renderer extends plugin_renderer_base {
     
     public function render_page_content($collaborate, $cm, $page) {
         
-        $data = new stdClass();
-        
-        $data->heading = $collaborate->title;
-        
+        $data = new stdClass();        
+        $data->heading = $collaborate->title;        
         $data->user = 'User: '. strtoupper($page);
         
         // Get the content from the database.
         $content = ($page == 'a') ? $collaborate->instructionsa : $collaborate->instructionsb;
-        $data->body = $content;
+        
+        $filearea = 'instructions' . $page;
+        $context = context_module::instance($cm->id);
+        $content = file_rewrite_pluginfile_urls($content, 'pluginfile.php', $context->id,
+                'mod_collaborate', $filearea, $collaborate->id);
+        
+        // Run the content through format_text to enable streaming video etc.
+        $formatoptions = new stdClass;
+        $formatoptions->noclean = true;
+        $formatoptions->overflowdiv = true;
+        $formatoptions->context = $context;
+        $format = ($page == 'a') ? $collaborate->instructionsaformat : $collaborate->instructionsbformat;
+        
+        $data->body = format_text($content, $format, $formatoptions);
         
         // Get a return url back to view page.
         $urlv = new \moodle_url('/mod/collaborate/view.php', ['id' => $cm->id]);
