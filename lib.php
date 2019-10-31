@@ -87,8 +87,6 @@ function collaborate_add_instance(stdClass $collaborate, mod_collaborate_mod_for
     
     $collaborate->id = $DB->insert_record('collaborate', $collaborate);
 
-    $collaborate->timemodified = time();
-
     // Call std Moodle file_postupdate_standard editor to save files,
     // and prepare editor content for saving in database.
     $cmid = $collaborate->coursemodule;

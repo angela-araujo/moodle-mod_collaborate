@@ -55,3 +55,11 @@ $string['studenta'] = 'Partner A';
 $string['studentb'] = 'Partner B';
 
 $string['returnview'] = 'Return view';
+
+// Settings.
+$string['enablereports'] = 'Enable reports';
+$string['enablereports_desc'] = 'Desc';
+
+$string['viewtab'] = 'View tab';
+$string['reportstab'] = 'Reports tab';
+
