@@ -39,6 +39,21 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool
  */
 function xmldb_collaborate_upgrade($oldversion) {
-
+    
+    global $DB;
+    $dbman = $DB->get_manager();
+    
+    if ($oldversion < XXXXXXXX) {
+        
+        // Define new table to be created.
+        $table = new xmldb_table('collaborate_submissions');
+        
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        
+        upgrade_mod_savepoint(true, XXXXXXXX, 'collaborate');
+    }
+    
     return true;
 }
