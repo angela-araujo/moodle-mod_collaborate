@@ -71,7 +71,7 @@ function xmldb_collaborate_upgrade($oldversion) {
         
         // Define field grade to be added to collaborate_submissions.
         $table = new xmldb_table('collaborate_submissions');
-        $field = new xmldb_field('grade', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '100', 'timemodified');
+        $field = new xmldb_field('grade', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'timemodified');
         
         // Conditionally launch add field grade.
         if (!$dbman->field_exists($table, $field)) {

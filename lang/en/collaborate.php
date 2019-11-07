@@ -37,6 +37,7 @@ $string['collaborate:addinstance'] = 'Add a new collaborate';
 $string['collaborate:submit'] = 'Submit collaborate';
 $string['collaborate:view'] = 'View collaborate';
 $string['collaborate:viewreportstab'] = 'View reports';
+$string['collaborate:gradesubmission'] = 'Grade submission';
 $string['collaboratefieldset'] = 'Custom example fieldset';
 $string['collaboratename'] = 'collaborate name';
 $string['collaboratename_help'] = 'This is the content of the help tooltip associated with the collaboratename field. Markdown syntax is supported.';
@@ -77,4 +78,11 @@ $string['title'] = 'Title';
 $string['submission'] = 'Submission text (part)';
 $string['firstname'] = 'First name';
 $string['lastname'] = 'Last name';
+
+// Grading form.
 $string['grade'] = 'Grade';
+$string['allocate_grade'] = 'Allocate a grade';
+$string['gradingheader'] = 'Grade a submission';
+$string['currentgrade'] = 'Current grade: ';
+$string['user'] = 'User: ';
+$string['grade_saved'] = 'Grade saved';

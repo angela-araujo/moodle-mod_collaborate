@@ -24,6 +24,7 @@
  * @see https://github.com/justinhunt/moodle-mod_collaborate
  */
 use \mod_collaborate\local\debugging;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -34,9 +35,9 @@ class mod_collaborate_renderer extends plugin_renderer_base {
     /**
      * Displays the main view page content.
      *
-     * @param $collaborate the collaborate instance std Object
-     * @param $cm the course module std Object
-     * @return none
+     * @param $collaborate Object collaborate instance
+     * @param $cm Object course module  
+     * @return void
      */
     public function render_view_page_content($collaborate, $cm, $reportstab = false) {
 
@@ -70,6 +71,14 @@ class mod_collaborate_renderer extends plugin_renderer_base {
         echo $this->output->footer();
     }
     
+    /**
+     * Display the page of partner
+     * 
+     * @param object $collaborate
+     * @param int $cm
+     * @param string $page
+     * @param object $form
+     */
     public function render_page_content($collaborate, $cm, $page, $form) {
         
         $data = new stdClass();        
@@ -111,8 +120,8 @@ class mod_collaborate_renderer extends plugin_renderer_base {
      * @param object $collaborate the collaborate instance std Object
      * @param object $cm the course module std Object
      * @param array $submissions 2D array of submission records
-     * @param headers $headers the strings for the column headers
-     * @return none
+     * @param string $headers the strings for the column headers
+     * @return void
      */
     public function render_reports_page_content($collaborate, $cm, $submissions, $headers, $reportstab = false) {
         
@@ -134,5 +143,39 @@ class mod_collaborate_renderer extends plugin_renderer_base {
         echo $this->output->header();
         echo $this->render_from_template('mod_collaborate/reports', $data);
         echo $this->output->footer();
+    }
+    
+    /**
+     * Submission to grade.
+     * 
+     * @param object $submission
+     * @param context $context
+     * @param int $cid
+     * @param int $sid
+     * @return string|boolean
+     */
+    public function render_submission_to_grade($submission, $context, $cid, $sid) {
+        
+        $data = new stdClass();
+        $data->pageheader =  get_string('gradingheader', 'mod_collaborate');
+        $data->title = $submission->title;
+        $data->firstname = $submission->firstname;
+        $data->lastname = $submission->lastname;
+        $data->grade = $submission->grade;
+        
+        // Submission.
+        $content = file_rewrite_pluginfile_urls($submission->submission, 'pluginfile.php', $context->id,
+                'mod_collaborate', 'submissions', $sid);
+        
+        // Format submission.
+        $formatoptions = new stdClass;
+        $formatoptions->noclean = true;
+        $formatoptions->overflowdiv = true;
+        $formatoptions->context = $context;
+        $format = $submission->submission;
+        $data->submission = format_text($content, $format, $formatoptions);
+        
+        return $this->render_from_template('mod_collaborate/submissiontograde', $data);
+        
     }
 }

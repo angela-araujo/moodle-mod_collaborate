@@ -16,7 +16,7 @@
 }}
 
 {{!
-    @template mod_collaborate/pagerow
+    @template mod_collaborate/submissiontograde
 
     Moodle renders a simple show page
 
@@ -28,15 +28,22 @@
 
     Example context (json):
         {
-
+         
         }
 }}
-<tr class="danger">
-  <td>{{id}}</td>
-  <td>{{title}}</td>
-  <td>{{#shortentext}} 30, {{submission}} {{/shortentext}}</td>
-  <td>{{firstname}}</td>
-  <td>{{lastname}}</td>
-  <td>{{grade}}</td>
-  <td><a href = "{{gradelink}}" class="btn btn-primary">{{gradetext}}</a><td>
-</tr>
+<div class="container">
+  <h1>{{pageheader}}</h1>
+  <h3>{{title}}</h3>
+  <div class="card bg-primary text-light">
+    <div class="card-body">
+        {{# str }} user, mod_collaborate {{/ str }} {{firstname}} {{lastname}}<br />
+        {{# str }} currentgrade, mod_collaborate {{/ str }} {{grade}}<br />
+    </div>
+  </div>
+  <div class="card bg-light">
+    <div class="card-body ">
+        {{{submission}}}<br />
+    </div>
+  </div>
+  <br />
+</div>

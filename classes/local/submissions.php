@@ -22,9 +22,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_collaborate\local;
+
 use \mod_collaborate\local\collaborate_editor;
 use \mod_collaborate\local\debugging;
 use \mod_collaborate\local\submission_form;
+
 defined('MOODLE_INTERNAL') || die();
 
 class submissions {
@@ -40,11 +42,13 @@ class submissions {
         
         global $DB, $USER;
         $exists = self::get_submission($cid, $USER->id, $page);
+        
         if($exists) {
-            $DB->delete_records('collaborate_submissions',
-                    ['collaborateid' => $cid, 'userid' => $USER->id, 'page' => $page]);
+            $DB->delete_records('collaborate_submissions', ['collaborateid' => $cid, 'userid' => $USER->id, 'page' => $page]);
         }
+        
         $options = collaborate_editor::get_editor_options($context);
+        
         // Insert a dummy record and get the id.
         $data->timecreated = time();
         $data->timemodified = time();
@@ -86,14 +90,15 @@ class submissions {
                 get_string('submission','mod_collaborate'),
                 get_string('firstname', 'mod_collaborate'),
                 get_string('lastname', 'mod_collaborate'),
-                get_string('grade',  'mod_collaborate')];
+                get_string('grade',  'mod_collaborate'),
+                ""];
     }
     
     /**
      * Set the headers to match the sql query and required report fields.
      *
-     * @param int $cid our collaborate instance id.
-     * @return An array of records
+     * @param $cid int  our collaborate instance id.
+     * @return Array An array of records
      */
     public static function get_submission_records($cid) {
         
@@ -114,9 +119,28 @@ class submissions {
             $data['firstname'] = $user->firstname;
             $data['lastname'] = $user->lastname;
             $data['grade'] = $record->grade;
+            $data['grade'] = ($record->grade == 0) ? '-' : $record->grade;
+            
+            // Add a URL to the grading page.
+            $g = new \moodle_url('/mod/collaborate/grading.php', ['cid' => $collaborate->id, 'sid' => $record->id]);
+            $data['gradelink'] = $g->out(false);
+            $data['gradetext'] = get_string('grade', 'mod_collaborate');
             $submissions[] = $data;
         }
         return $submissions;
+    }
+    
+    /**
+     * 
+     * @param $sid int Submission id
+     * @param $grade Object grade
+     */
+    public static function update_grade($sid, $grade) {
+        
+        global $DB;
+        
+        $DB->set_field('collaborate_submissions', 'grade', $grade, ['id' => $sid]);
+        
     }
     
 }
