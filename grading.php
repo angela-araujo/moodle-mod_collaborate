@@ -24,20 +24,17 @@
  * @see https://github.com/justinhunt/moodle-mod_collaborate
  */
 
-/**
- * 
- * @package    mod_collaborate
- * @author angela
- *
- */
+
 use \core\output\notification;
+use \mod_collaborate\local\debugging;
 use \mod_collaborate\local\submissions;
 
-defined('MOODLE_INTERNAL') || die();
-
 require_once('../../config.php');
+require_once($CFG->libdir . '/formslib.php');
 
-
+/**
+ * Define a form for grading submissions..
+ */
 class collaborate_grading_form extends moodleform {
     /**
      * Defines forms elements
@@ -49,7 +46,7 @@ class collaborate_grading_form extends moodleform {
         
         // grades available.
         $grades = array();
-        for ($m = 0; $m <= 100; $m++) {
+        for ($m = 0; $m <= $this->_customdata['maxgrade']; $m++) {
             $grades[$m] = '' . $m;
         }
         
@@ -92,11 +89,12 @@ $reportsurl = new moodle_url('/mod/collaborate/reports.php', ['cid' => $cid]);
 
 // Get the submission information.
 $submission = submissions::get_submission_to_grade($collaborate, $sid);
-$mform = new collaborate_grading_form(null, ['cid' => $cid,'sid' => $sid]);
+$mform = new collaborate_grading_form(null, ['cid' => $cid,'sid' => $sid, 'maxgrade' => $collaborate->grade]);
 
 // Check if the form has been cancelled.  If it has redirect to reports page.
 if ($mform->is_cancelled()) {
     redirect($reportsurl, get_string('cancelled'), 2, notification::NOTIFY_INFO);
+    debugging::logit('$mform->is_cancelled()   :     ', $mform);
 }
 
 // If the form has data load it in, update the submissions table and redirect to the reports page.
@@ -107,13 +105,14 @@ if ($data = $mform->get_data()) {
     
     // Update the submission data.
     submissions::update_grade($sid, $data->grade);
+    collaborate_update_grades($collaborate);
     redirect($reportsurl, get_string('grade_saved', 'mod_collaborate'), 2, notification::NOTIFY_SUCCESS);
 }
+
 
 // Display the page.
 $renderer = $PAGE->get_renderer('mod_collaborate');
 echo $OUTPUT->header();
 echo $renderer->render_submission_to_grade($submission, $context, $cid, $sid);
-echo 'Oieee';
 $mform->display();
 echo $OUTPUT->footer();

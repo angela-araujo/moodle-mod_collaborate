@@ -25,6 +25,7 @@
  * */
 
 use \core\output\notification;
+use\ mod_collaborate\local\debugging;
 use \mod_collaborate\local\submissions;
 
 require_once('../../config.php');

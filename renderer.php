@@ -17,13 +17,12 @@
 /**
  * Custom renderer for output of pages
  *
- * @package    mod_simplelesson
+ * @package    mod_collaborate
  * @copyright  2019 Richard Jones <richardnz@outlook.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @see https://github.com/moodlehq/moodle-mod_collaborate
  * @see https://github.com/justinhunt/moodle-mod_collaborate
  */
-use \mod_collaborate\local\debugging;
 
 defined('MOODLE_INTERNAL') || die();
 
