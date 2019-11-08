@@ -170,4 +170,65 @@ class submissions {
         return $data;
     }
     
+    
+    /**
+     * 
+     * @param unknown $attempts
+     * @return number|unknown
+     */
+    public static function grade_user($attempts) {
+        
+        global $DB;
+        
+        // We could use different strategies here.
+        $maxscore = 0;
+        foreach ($attempts as $attempt) {
+            $grade = $attempt->grade;
+            $maxscore = ($grade > $maxscore) ? $grade : $maxscore;
+        }
+        return $maxscore;
+    }
+    
+    /*    
+    public static function grade_user($cm, $attempts) {
+        global $DB;
+        
+        if (!$attempts) { return 0; }
+        $options = new display_options();
+        
+        // Grading methods are in instance settings.
+        switch($cm->grademethod) {
+            
+            case constants::MOD_SIMPLELESSON_GRADE_HIGHEST:
+                $maxscore = 0;
+                foreach ($attempts as $attempt) {
+                    $attemptscore = $attempt->sessionscore;
+                    $maxscore = ($attemptscore > $maxscore) ?
+                    $attemptscore : $maxscore;
+                }
+                return $maxscore;
+                break;
+                
+            case constants::MOD_SIMPLELESSON_GRADE_AVERAGE:
+                $score = 0.0;
+                foreach ($attempts as $attempt) {
+                    $score += $attempt->sessionscore;
+                }
+                $n = count($attempts);
+                return $score / $n;
+                break;
+                
+            case constants::MOD_SIMPLELESSON_GRADE_LAST:
+                $latest = 0;
+                foreach ($attempts as $attempt) {
+                    $time = $attempt->timecreated;
+                    if ($time > $latest) {
+                        $latest = $time;
+                        $score = $attempt->sessionscore;
+                    }
+                }
+                return $score;
+        }
+    }*/
+    
 }

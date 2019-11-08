@@ -106,6 +106,10 @@ if ($data = $mform->get_data()) {
     // Update the submission data.
     submissions::update_grade($sid, $data->grade);
     collaborate_update_grades($collaborate);
+    
+    // Update the gradebook.
+    collaborate_update_grades($collaborate);
+    
     redirect($reportsurl, get_string('grade_saved', 'mod_collaborate'), 2, notification::NOTIFY_SUCCESS);
 }
 
