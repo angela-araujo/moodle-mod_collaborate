@@ -39,17 +39,20 @@ class collaborate_namechanger_form extends moodleform {
      * Defines forms elements
      */
     public function definition() {
+        
         global $CFG;
         
         $mform = $this->_form;
         
         // Adding the standard "name" field
         $mform->addElement('text', 'name', get_string('collaboratename', 'mod_collaborate'), array('size'=>'64'));
+        
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
             $mform->setType('name', PARAM_CLEAN);
         }
+        
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('name', 'collaboratename', 'mod_collaborate');
@@ -98,7 +101,7 @@ if ($data = $mform->get_data()) {
 $renderer = $PAGE->get_renderer('mod_collaborate');
 
 // If the action is "edit" show the edit form.
-if($action =="edit"){
+if ($action =="edit"){
     // Create some data for our form.
     $data = new stdClass();
     $data->courseid = $courseid;

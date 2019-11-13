@@ -596,3 +596,13 @@ function collaborate_get_user_grades($collaborate, $userid = 0) {
     }
     return $grades;
 }
+
+/**
+ * A task called from scheduled or adhoc
+ *
+ * @param progress_trace trace object
+ *
+ */
+function collaborate_dotask(progress_trace $trace) {
+    $trace->output('executing dotask');
+}
